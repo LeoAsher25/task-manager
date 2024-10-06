@@ -1,9 +1,17 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+// src/__tests__/App.test.tsx
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
+// Mock the TaskManager component
+jest.mock("./components/TaskManager", () => {
+  return () => <div>Mocked TaskManager</div>;
+});
+
+test("renders App and TaskManager", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+  // Check if TaskManager is rendered
+  const taskManagerElement = screen.getByText(/mocked taskmanager/i);
+  expect(taskManagerElement).toBeInTheDocument();
 });
