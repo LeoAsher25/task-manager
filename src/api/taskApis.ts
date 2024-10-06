@@ -29,6 +29,16 @@ export const addTask = async (task: ITaskFormData): Promise<ITask> => {
   return response.data;
 };
 
+export const updateTask = async (
+  id: string,
+  task: ITaskFormData
+): Promise<ITask> => {
+  const response = await axiosInstance.patch(`/tasks/${id}`, {
+    name: task.name,
+  });
+  return response.data;
+};
+
 export const updateTaskStatus = async (
   id: string,
   isCompleted: boolean
@@ -36,5 +46,10 @@ export const updateTaskStatus = async (
   const response = await axiosInstance.patch(`/tasks/${id}`, {
     isCompleted,
   });
+  return response.data;
+};
+
+export const deleteTask = async (id: string) => {
+  const response = await axiosInstance.delete(`/tasks/${id}`);
   return response.data;
 };

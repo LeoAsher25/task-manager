@@ -1,14 +1,21 @@
-// src/components/TaskItem.tsx
-import React from "react";
-import { FaCheck } from "react-icons/fa";
+// ... existing imports ...
+import React, { Dispatch } from "react";
+import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { ITask } from "src/types";
 
 interface TaskItemProps {
   task: ITask;
   toggleTaskCompletion: (id: string, isCompleted: boolean) => void;
+  handleUpdate: Dispatch<React.SetStateAction<ITask | null>>;
+  handleDelete: (id: string) => void;
 }
 
-const TaskItem = ({ task, toggleTaskCompletion }: TaskItemProps) => {
+const TaskItem = ({
+  task,
+  toggleTaskCompletion,
+  handleUpdate,
+  handleDelete,
+}: TaskItemProps) => {
   return (
     <li
       key={task.id}
@@ -17,7 +24,7 @@ const TaskItem = ({ task, toggleTaskCompletion }: TaskItemProps) => {
       } transition-colors duration-300`}>
       <button
         onClick={() => toggleTaskCompletion(task.id, !task.isCompleted)}
-        className={`w-6 h-6 mr-4 rounded-full flex items-center justify-center ${
+        className={`min-w-6 w-6 h-6 mr-4 rounded-full flex items-center justify-center ${
           task.isCompleted
             ? "bg-green-500 text-white"
             : "bg-white border-2 border-gray-400"
@@ -33,9 +40,15 @@ const TaskItem = ({ task, toggleTaskCompletion }: TaskItemProps) => {
         }`}>
         {task.name}
       </span>
-      {task.isCompleted && (
-        <FaCheck className="text-green-500 ml-2" aria-label="Completed" />
-      )}
+
+      <div className="flex items-center gap-3">
+        <button aria-label="Edit task" onClick={() => handleUpdate(task)}>
+          <FaEdit className="cursor-pointer text-xl text-indigo-600" />
+        </button>
+        <button aria-label="Delete task" onClick={() => handleDelete(task.id)}>
+          <FaTrash className="cursor-pointer text-xl text-red-500" />
+        </button>
+      </div>
     </li>
   );
 };

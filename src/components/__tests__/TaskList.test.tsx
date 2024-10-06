@@ -1,4 +1,4 @@
-// src/components/__tests__/TaskList.test.tsx
+// ... existing imports ...
 import { render, screen } from "@testing-library/react";
 import TaskList from "../TaskList";
 import { ITask } from "src/types";
@@ -9,9 +9,16 @@ test("renders TaskList with multiple tasks", () => {
     { id: "2", name: "Task 2", isCompleted: true },
   ];
   const mockToggleTaskCompletion = jest.fn();
+  const mockHandleUpdate = jest.fn();
+  const mockHandleDelete = jest.fn();
 
   render(
-    <TaskList tasks={tasks} toggleTaskCompletion={mockToggleTaskCompletion} />
+    <TaskList
+      tasks={tasks}
+      toggleTaskCompletion={mockToggleTaskCompletion}
+      handleUpdate={mockHandleUpdate}
+      handleDelete={mockHandleDelete}
+    />
   );
 
   const task1 = screen.getByText(/task 1/i);
@@ -24,9 +31,16 @@ test("renders TaskList with multiple tasks", () => {
 test("shows message when no tasks are found", () => {
   const tasks: ITask[] = [];
   const mockToggleTaskCompletion = jest.fn();
+  const mockHandleUpdate = jest.fn();
+  const mockHandleDelete = jest.fn();
 
   render(
-    <TaskList tasks={tasks} toggleTaskCompletion={mockToggleTaskCompletion} />
+    <TaskList
+      tasks={tasks}
+      toggleTaskCompletion={mockToggleTaskCompletion}
+      handleUpdate={mockHandleUpdate}
+      handleDelete={mockHandleDelete}
+    />
   );
 
   const noTasksMessage = screen.getByText(/no tasks found/i);

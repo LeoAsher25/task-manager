@@ -1,20 +1,30 @@
 import { ITask } from "src/types";
 import TaskItem from "./TaskItem";
+import { Dispatch } from "react";
 
 interface TaskListProps {
   tasks: ITask[];
   toggleTaskCompletion: (id: string, isCompleted: boolean) => void;
+  handleUpdate: Dispatch<React.SetStateAction<ITask | null>>;
+  handleDelete: (id: string) => void;
 }
 
-const TaskList = ({ tasks, toggleTaskCompletion }: TaskListProps) => {
+const TaskList = ({
+  tasks,
+  toggleTaskCompletion,
+  handleUpdate,
+  handleDelete,
+}: TaskListProps) => {
   return (
     <div>
-      <ul className="space-y-2">
+      <ul className="space-y-2 lg:space-y-3">
         {tasks.map((task) => (
           <TaskItem
             key={task.id}
             task={task}
             toggleTaskCompletion={toggleTaskCompletion}
+            handleUpdate={handleUpdate}
+            handleDelete={handleDelete}
           />
         ))}
       </ul>

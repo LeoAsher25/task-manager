@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
-import { fetchTasks, updateTaskStatus } from "src/api/taskApis";
-import { IPaginatedResponse, ITask, PaginationParam } from "src/types";
+import { deleteTask, fetchTasks, updateTaskStatus } from "src/api/taskApis";
+import {
+  IPaginatedResponse,
+  ITask,
+  ITaskFormData,
+  PaginationParam,
+} from "src/types";
 import FilterButtons from "./FilterButtons";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
@@ -19,6 +24,7 @@ const TaskManager = () => {
   });
   const [filter, setFilter] = useState<number>(-1);
   const [loading, setLoading] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
 
   const [pagination, setPagination] = useState<PaginationParam>({
     _page: 1,
@@ -37,11 +43,24 @@ const TaskManager = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteTask(id);
+      toast.error("Delete task successfully");
+      await loadTasks();
+    } catch (error) {
+      handleError(error as Error);
+    }
+  };
+
   useEffect(() => {
     loadTasks();
   }, [filter, pagination]);
 
   const onTaskAdded = async () => {
+    if (selectedTask) {
+      setSelectedTask(null);
+    }
     await loadTasks();
   };
 
@@ -51,6 +70,7 @@ const TaskManager = () => {
       _page: page,
     });
   };
+
   const onItemsPerPageChange = (itemsPerPage: number) => {
     setPagination({
       ...pagination,
@@ -80,7 +100,7 @@ const TaskManager = () => {
       <h1 className="text-3xl font-bold mb-6 text-center text-indigo-600">
         Task Manager
       </h1>
-      <TaskForm onTaskAdded={onTaskAdded} />
+      <TaskForm onTaskAdded={onTaskAdded} selectedTask={selectedTask} />
       <FilterButtons filter={filter} onFilterChange={setFilter} />
       {loading ? (
         <div className="text-center">Loading...</div>
@@ -88,9 +108,10 @@ const TaskManager = () => {
         <TaskList
           tasks={taskListData.data}
           toggleTaskCompletion={toggleTaskCompletion}
+          handleUpdate={setSelectedTask}
+          handleDelete={handleDelete}
         />
       )}
-
       <div className="mt-6">
         <Pagination
           totalItems={taskListData.items}
